@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Магазин электроники - Демонстрация позиционирования</title>
+    <style>
+        /* Основные стили */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding-top: 70px; /* Для фиксированного меню */
+        }
+        
+        /* Фиксированное меню */
+        .fixed-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        
+        .fixed-menu ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+        }
+        
+        .fixed-menu li {
+            margin: 0 20px;
+        }
+        
+        .fixed-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 18px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        
+        .fixed-menu a:hover {
+            background-color: #3498db;
+        }
+        
+        /* Липкий заголовок */
+        .sticky-header {
+            position: sticky;
+            top: 60px; /* Учитываем высоту фиксированного меню */
+            background-color: #3498db;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 32px;
+            margin-bottom: 30px;
+            z-index: 999;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Контейнер страницы */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Блок с relative позиционированием */
+        .relative-container {
+            position: relative;
+            width: 100%;
+            height: 400px;
+            background-color: #ecf0f1;
+            border-radius: 10px;
+            margin-bottom: 40px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        /* Блоки с absolute позиционированием внутри relative контейнера */
+        .absolute-box {
+            position: absolute;
+            width: 200px;
+            height: 120px;
+            padding: 15px;
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        
+        .box-1 {
+            background-color: #e74c3c;
+            top: 30px;
+            left: 50px;
+            z-index: 10;
+        }
+        
+        .box-2 {
+            background-color: #2ecc71;
+            top: 100px;
+            left: 120px;
+            z-index: 20;
+        }
+        
+        .box-3 {
+            background-color: #f39c12;
+            top: 170px;
+            left: 190px;
+            z-index: 30;
+        }
+        
+        .box-4 {
+            background-color: #9b59b6;
+            top: 240px;
+            left: 260px;
+            z-index: 40;
+        }
+        
+        /* Карточки товаров с CSS Grid */
+        .products-section {
+            margin-bottom: 50px;
+        }
+        
+        .section-title {
+            font-size: 28px;
+            margin-bottom: 25px;
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .product-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+        
+        .product-img {
+            height: 200px;
+            width: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        
+        .product-info {
+            padding: 20px;
+        }
+        
+        .product-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+        
+        .product-description {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 15px;
+        }
+        
+        .product-price {
+            font-size: 22px;
+            font-weight: bold;
+            color: #e74c3c;
+            margin-bottom: 15px;
+        }
+        
+        .buy-button {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .buy-button:hover {
+            background-color: #2980b9;
+        }
+        
+        /* Центрирование с Flexbox */
+        .flex-center-section {
+            background-color: #2c3e50;
+            color: white;
+            padding: 40px 20px;
+            border-radius: 10px;
+            margin-bottom: 40px;
+        }
+        
+        .flex-center-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+        }
+        
+        .centered-element {
+            background-color: #e74c3c;
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Информационные блоки */
+        .info-section {
+            margin-bottom: 50px;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .info-card {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .info-card h3 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+        
+        /* Подвал */
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+        }
+        
+        /* Абсолютно позиционированный элемент на всей странице */
+        .floating-label {
+            position: absolute;
+            top: 100px;
+            right: 20px;
+            background-color: #9b59b6;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 50;
+        }
+        
+        /* Изображение в блоке с relative позиционированием */
+        .relative-container img {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 150px;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Стиль для иконок в информационных карточках */
+        .info-icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 15px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        
+        /* Адаптивные изображения */
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Фиксированное меню -->
+    <nav class="fixed-menu">
+        <ul>
+            <li><a href="#home">Главная</a></li>
+            <li><a href="#products">Товары</a></li>
+            <li><a href="#positioning">Позиционирование</a></li>
+            <li><a href="#about">О нас</a></li>
+            <li><a href="#contact">Контакты</a></li>
+        </ul>
+    </nav>
+    
+    <!-- Липкий заголовок -->
+    <header class="sticky-header">
+        Магазин электроники "TechStore"
+    </header>
+    
+    <!-- Абсолютно позиционированный элемент -->
+    <div class="floating-label">Акция: скидка 15%</div>
+    
+    <!-- Основной контейнер -->
+    <div class="container">
+        <!-- Демонстрация relative и absolute позиционирования -->
+        <section class="info-section" id="positioning">
+            <h2 class="section-title">Демонстрация позиционирования элементов</h2>
+            <div class="relative-container">
+                <div class="absolute-box box-1">position: absolute</div>
+                <div class="absolute-box box-2">top: 100px</div>
+                <div class="absolute-box box-3">left: 190px</div>
+                <div class="absolute-box box-4">z-index: 40</div>
+                <img src="https://images.unsplash.com/photo-1546054451-aa724b68d41c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="Электронные компоненты">
+                <div style="position: absolute; bottom: 20px; left: 20px; background-color: rgba(0,0,0,0.7); color: white; padding: 15px; border-radius: 5px; max-width: 300px;">
+                    Этот контейнер имеет <strong>position: relative</strong> и служит точкой отсчета для абсолютно позиционированных элементов внутри него.
+                </div>
+            </div>
+            
+            <div class="info-grid">
+                <div class="info-card">
+                    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="Фиксированное меню" class="info-icon">
+                    <h3>Position: Fixed</h3>
+                    <p>Меню вверху страницы использует <strong>position: fixed</strong>. Оно остается на месте при прокрутке страницы.</p>
+                </div>
+                <div class="info-card">
+                    <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="Липкий заголовок" class="info-icon">
+                    <h3>Position: Sticky</h3>
+                    <p>Заголовок "Магазин электроники" использует <strong>position: sticky</strong>. Он прилипает к верху при прокрутке.</p>
+                </div>
+                <div class="info-card">
+                    <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="Абсолютное позиционирование" class="info-icon">
+                    <h3>Position: Absolute & Relative</h3>
+                    <p>Цветные блоки внутри серого контейнера используют <strong>position: absolute</strong>, а их родительский контейнер имеет <strong>position: relative</strong>.</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Карточки товаров с CSS Grid -->
+        <section class="products-section" id="products">
+            <h2 class="section-title">Популярные товары</h2>
+            <div class="products-grid">
+                <!-- Карточка товара 1 -->
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1598327105666-5b89351aff97?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Смартфон Galaxy X10" class="product-img">
+                    <div class="product-info">
+                        <h3 class="product-title">Смартфон Galaxy X10</h3>
+                        <p class="product-description">Мощный смартфон с 6.7-дюймовым экраном, тройной камерой и процессором последнего поколения.</p>
+                        <div class="product-price">24 999 ₽</div>
+                        <a href="#" class="buy-button">Купить</a>
+                    </div>
+                </div>
+                
+                <!-- Карточка товара 2 -->
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Ноутбук ProBook 15" class="product-img">
+                    <div class="product-info">
+                        <h3 class="product-title">Ноутбук ProBook 15</h3>
+                        <p class="product-description">Легкий и производительный ноутбук с диагональю 15.6 дюймов, идеален для работы и учебы.</p>
+                        <div class="product-price">54 999 ₽</div>
+                        <a href="#" class="buy-button">Купить</a>
+                    </div>
+                </div>
+                
+                <!-- Карточка товара 3 -->
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w-800&q=80" alt="Наушники SoundMax Pro" class="product-img">
+                    <div class="product-info">
+                        <h3 class="product-title">Наушники SoundMax Pro</h3>
+                        <p class="product-description">Беспроводные наушники с активным шумоподавлением и временем работы до 30 часов.</p>
+                        <div class="product-price">8 499 ₽</div>
+                        <a href="#" class="buy-button">Купить</a>
+                    </div>
+                </div>
+                
+                <!-- Карточка товара 4 -->
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Планшет TabPad 10" class="product-img">
+                    <div class="product-info">
+                        <h3 class="product-title">Планшет TabPad 10</h3>
+                        <p class="product-description">Универсальный планшет с 10-дюймовым дисплеем, подходит для работы и развлечений.</p>
+                        <div class="product-price">32 999 ₽</div>
+                        <a href="#" class="buy-button">Купить</a>
+                    </div>
+                </div>
+                
+                <!-- Карточка товара 5 -->
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Умные часы WatchFit 2" class="product-img">
+                    <div class="product-info">
+                        <h3 class="product-title">Умные часы WatchFit 2</h3>
+                        <p class="product-description">Фитнес-часы с отслеживанием активности, мониторингом сна и уведомлениями.</p>
+                        <div class="product-price">6 799 ₽</div>
+                        <a href="#" class="buy-button">Купить</a>
+                    </div>
+                </div>
+                
+                <!-- Карточка товара 6 -->
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80" alt="Портативная колонка SoundBox" class="product-img">
+                    <div class="product-info">
+                        <h3 class="product-title">Наушники 2 серия  SoundBox</h3>
+                        <p class="product-description">Мощные наушники с защитой от воды и временем работы до 20 часов.</p>
+                        <div class="product-price">5 999 ₽</div>
+                        <a href="#" class="buy-button">Купить</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Центрирование с Flexbox -->
+        <section class="flex-center-section">
+            <h2 class="section-title" style="color: white; border-bottom-color: #e74c3c;">Центрирование с помощью Flexbox</h2>
+            <div class="flex-center-container">
+                <div class="centered-element">
+                    <img src="https://images.unsplash.com/photo-1614732414444-096e5f1122d5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="Flexbox иконка" style="width: 60px; height: 60px; margin-bottom: 10px; border-radius: 50%;">
+                    Этот элемент идеально отцентрован<br>с помощью Flexbox
+                </div>
+            </div>
+            <p style="text-align: center; margin-top: 20px; font-size: 18px;">
+                Использованы свойства: <strong>display: flex</strong>, <strong>justify-content: center</strong> и <strong>align-items: center</strong>
+            </p>
+        </section>
+        
+        <!-- Информация о магазине -->
+        <section class="info-section" id="about">
+            <h2 class="section-title">О нашем магазине</h2>
+            <div class="info-grid">
+                <div class="info-card">
+                    <img src="https://images.unsplash.com/photo-1556656793-08538906a9f8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="Широкий ассортимент" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 15px;">
+                    <h3>Широкий ассортимент</h3>
+                    <p>У нас вы найдете последние модели смартфонов, ноутбуков, планшетов и другой электроники от ведущих мировых производителей.</p>
+                </div>
+                <div class="info-card">
+                    <img src="https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="Гарантия качества" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 15px;">
+                    <h3>Гарантия качества</h3>
+                    <p>Все товары поставляются с официальной гарантией производителя. Мы тщательно проверяем каждую единицу товара перед продажей.</p>
+                </div>
+                <div class="info-card">
+                    <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=200&q=80" alt="Быстрая доставка" style="width: 100%; height: 150px; object-fit: cover; border-radius: 8px; margin-bottom: 15px;">
+                    <h3>Быстрая доставка</h3>
+                    <p>Доставляем заказы по всей стране в кратчайшие сроки. В крупных городах доступна доставка в день заказа.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Подвал -->
+    <footer id="contact">
+        <img src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=100&q=80" alt="Логотип магазина" style="width: 80px; height: 80px; border-radius: 50%; margin-bottom: 15px;">
+        <p>Магазин электроники "TechStore" &copy; 2023</p>
+        <p>Телефон: +7 (800) 123-45-67 | Email: info@techstore.ru</p>
+        <p>Все права защищены. Демонстрационная страница для изучения CSS позиционирования.</p>
+    </footer>
+</body>
+</html>
